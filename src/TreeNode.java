@@ -52,4 +52,17 @@ public class TreeNode<T extends Comparable<T>> implements Node<T> {
     public void setRightChild(Node rightChild) {
         this.rightChild = rightChild;
     }
+
+    @Override
+    public String toString() {
+        return String.format("[%s (%s): левый потомок %s (%s), правый потомок %s (%s)]",
+                value,
+                color,
+                leftChild != null ? leftChild.getValue() : "-",
+                leftChild != null ? leftChild.getColor() : "-",
+                rightChild != null ? rightChild.getValue() : "-",
+                rightChild != null ? rightChild.getColor() : "-"
+            );
+
+    }
 }

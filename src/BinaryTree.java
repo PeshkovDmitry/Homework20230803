@@ -4,6 +4,52 @@ public class BinaryTree<T extends Comparable<T>> implements Tree<T> {
 
     public BinaryTree() {}
 
+    public void rebalance(Node node) {
+        if (node.getRightChild() != null
+                && node.getRightChild().getColor().equals(Color.RED)
+                && node.getLeftChild() != null
+                && node.getLeftChild().getColor().equals(Color.BLACK))
+            node = rightSwap(node);
+        if (node.getLeftChild() != null
+                && node.getLeftChild().getColor().equals(Color.RED)
+                && node.getLeftChild().getLeftChild() != null
+                && node.getLeftChild().getLeftChild().getColor().equals(Color.RED))
+            node = leftSwap(node);
+        if (node.getLeftChild() != null
+                && node.getLeftChild().getColor().equals(Color.RED)
+                && node.getRightChild() != null
+                && node.getRightChild().getColor().equals(Color.RED))
+            colorSwap(node);
+        if (root.getColor().equals(Color.RED))
+            root.setColor(Color.BLACK);
+    }
+
+    private Node leftSwap(Node node) {
+        System.out.println("Левый поворот");
+        Node y = node;
+        Node x = y.getLeftChild() != null ? y.getLeftChild() : null;
+        Node between = x.getRightChild() != null ? x.getRightChild() : null;
+        x.setRightChild(y);
+        y.setLeftChild(between);
+        return x;
+    }
+
+    private Node rightSwap(Node node) {
+        System.out.println("Правый поворот");
+        Node x = node;
+        Node y = x.getRightChild() != null ? x.getRightChild() : null;
+        Node between = y.getLeftChild() != null ? y.getLeftChild() : null;
+        y.setLeftChild(x);
+        x.setRightChild(between);
+        return y;
+    }
+
+    private void colorSwap(Node node) {
+        System.out.println("Смена цвета");
+        node.getLeftChild().setColor(Color.BLACK);
+        node.getRightChild().setColor(Color.BLACK);
+        node.setColor(Color.RED);
+    }
 
     @Override
     public void add(T value) {
@@ -38,10 +84,36 @@ public class BinaryTree<T extends Comparable<T>> implements Tree<T> {
                 treeNode.setLeftChild(newTreeNode);
             else
                 add(treeNode.getLeftChild(), newTreeNode);
+//        rebalance(treeNode);
     }
 
     @Override
     public void printTree() {
-
+        if (root == null) System.out.println("В дереве пусто");
+        else printTree(root);
     }
+
+    private void printTree(Node node) {
+        if (node != null) {
+            System.out.println(node);
+            if (node.getLeftChild() != null) printTree(node.getLeftChild());
+            if (node.getRightChild() != null) printTree(node.getRightChild());
+        }
+    }
+
+    public Node get(T value) {
+        if (root == null) return null;
+        else return get(root, value);
+    }
+
+    private Node get(Node node, T value) {
+        if (node.getValue().equals(value))
+            return node;
+        if (node.getLeftChild() != null)
+            return get(node.getLeftChild(), value);
+        if (node.getRightChild() != null)
+            return get(node.getRightChild(), value);
+        return null;
+    }
+
 }

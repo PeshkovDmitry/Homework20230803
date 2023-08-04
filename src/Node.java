@@ -14,4 +14,5 @@ public interface Node<T extends Comparable<T>> {
     Node getRightChild();
 
     void setRightChild(Node rightChild);
+
 }
