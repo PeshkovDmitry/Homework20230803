@@ -5,9 +5,11 @@ public class Main {
 
         BinaryTree<Integer> myTree = new BinaryTree<>();
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 5; i++) {
             myTree.add(new Random().nextInt(100));
         }
+
+
 //        myTree.add(5);
 //        myTree.add(9);
 //        myTree.add(8);

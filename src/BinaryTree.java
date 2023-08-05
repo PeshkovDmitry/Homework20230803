@@ -92,6 +92,11 @@ public class BinaryTree<T extends Comparable<T>> implements Tree<T> {
         rebalance();
     }
 
+    @Override
+    public Node<T> getRoot() {
+        return root;
+    }
+
     private void add(Node treeNode, TreeNode newTreeNode) {
         if (newTreeNode.getValue().compareTo(treeNode.getValue()) > 0)
             if (treeNode.getRightChild() == null)
