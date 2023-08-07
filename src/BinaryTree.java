@@ -4,33 +4,37 @@ public class BinaryTree<T extends Comparable<T>> implements Tree<T> {
 
     public BinaryTree() {}
 
+
     private void rebalance() {
         if (root != null) {
-            if (root.getLeftChild() != null)
-                root.setLeftChild(rebalance(root.getLeftChild()));
-            if (root.getRightChild() != null)
-                root.setRightChild(rebalance(root.getRightChild()));
+            long before = 0;
+            long after = -1;
+            while (before != after) {
+                before = getRedValuesHashSum(root);
+                root = rebalance(root);
+                root.setColor(Color.BLACK);
+                after = getRedValuesHashSum(root);
+            }
         }
     }
 
     private Node rebalance(Node node) {
-        if (node.getRightChild() != null
-                && node.getRightChild().getColor().equals(Color.RED)
-                && node.getLeftChild() != null
-                && node.getLeftChild().getColor().equals(Color.BLACK))
-            node = rightSwap(node);
-        if (node.getLeftChild() != null
-                && node.getLeftChild().getColor().equals(Color.RED)
-                && node.getLeftChild().getLeftChild() != null
-                && node.getLeftChild().getLeftChild().getColor().equals(Color.RED))
-            node = leftSwap(node);
-        if (node.getLeftChild() != null
-                && node.getLeftChild().getColor().equals(Color.RED)
-                && node.getRightChild() != null
-                && node.getRightChild().getColor().equals(Color.RED))
-            colorSwap(node);
-        if (root.getColor().equals(Color.RED))
-            root.setColor(Color.BLACK);
+            if (node.getRightChild() != null
+                    && node.getRightChild().getColor().equals(Color.RED)
+                    && (node.getLeftChild() != null
+                    && node.getLeftChild().getColor().equals(Color.BLACK)
+                    || node.getLeftChild() == null))
+                node = rightSwap(node);
+            if (node.getLeftChild() != null
+                    && node.getLeftChild().getColor().equals(Color.RED)
+                    && node.getLeftChild().getLeftChild() != null
+                    && node.getLeftChild().getLeftChild().getColor().equals(Color.RED))
+                node = leftSwap(node);
+            if (node.getLeftChild() != null
+                    && node.getLeftChild().getColor().equals(Color.RED)
+                    && node.getRightChild() != null
+                    && node.getRightChild().getColor().equals(Color.RED))
+                colorSwap(node);
         if (node.getLeftChild() != null)
             node.setLeftChild(rebalance(node.getLeftChild()));
         if (node.getRightChild() != null)
@@ -39,9 +43,8 @@ public class BinaryTree<T extends Comparable<T>> implements Tree<T> {
     }
 
     private Node leftSwap(Node node) {
-//        System.out.println("Левый поворот");
         Node y = node;
-        Node x = y.getLeftChild() != null ? y.getLeftChild() : null;
+        Node x = y.getLeftChild();
         Node between = x.getRightChild() != null ? x.getRightChild() : null;
         x.setRightChild(y);
         y.setLeftChild(between);
@@ -51,9 +54,8 @@ public class BinaryTree<T extends Comparable<T>> implements Tree<T> {
     }
 
     private Node rightSwap(Node node) {
-//        System.out.println("Правый поворот");
         Node x = node;
-        Node y = x.getRightChild() != null ? x.getRightChild() : null;
+        Node y = x.getRightChild();
         Node between = y.getLeftChild() != null ? y.getLeftChild() : null;
         y.setLeftChild(x);
         x.setRightChild(between);
@@ -63,7 +65,6 @@ public class BinaryTree<T extends Comparable<T>> implements Tree<T> {
     }
 
     private void colorSwap(Node node) {
-//        System.out.println("Смена цвета");
         node.getLeftChild().setColor(Color.BLACK);
         node.getRightChild().setColor(Color.BLACK);
         node.setColor(Color.RED);
@@ -137,6 +138,17 @@ public class BinaryTree<T extends Comparable<T>> implements Tree<T> {
         if (node.getRightChild() != null)
             return get(node.getRightChild(), value);
         return null;
+    }
+
+    private long getRedValuesHashSum(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        long sum = 0;
+        if (node.getColor().equals(Color.RED)) {
+            sum = node.getValue().hashCode();
+        }
+        return sum + getRedValuesHashSum(node.getLeftChild()) + getRedValuesHashSum(node.getRightChild());
     }
 
 }

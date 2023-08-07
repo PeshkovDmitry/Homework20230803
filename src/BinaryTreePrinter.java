@@ -2,16 +2,7 @@ import java.util.*;
 
 public class BinaryTreePrinter<T extends Comparable<T>> implements Printer{
 
-    private List<String> redValues;
-
-    private List<String> blackValues;
-
-    public BinaryTreePrinter() {
-        redValues = new ArrayList<>();
-        blackValues = new ArrayList<>();
-    }
-
-    @Override
+     @Override
     public void print(Tree tree) {
         List<String> list = getPlainList(tree);
         int maxValueLength = getMaxLength(list) + 2;
@@ -25,19 +16,9 @@ public class BinaryTreePrinter<T extends Comparable<T>> implements Printer{
     }
 
     private void markColor(List<String> lines) {
-        String[] symbols = new String[] {" ", "┌", "┐", "-", "\n"};
         for (int i = 0; i < lines.size(); i++) {
-            String currentLine = lines.get(i);
-            System.out.println(redValues);
-            for (String redValue: redValues) {
-                for (String startSym: symbols) {
-                    for (String endSym: symbols) {
-                        currentLine = currentLine.replace(startSym + redValue + endSym,
-                                startSym + ANSI_RED + redValue + ANSI_RESET + endSym);
-                    }
-                }
-                lines.set(i, currentLine);
-            }
+            lines.set(i, lines.get(i).replace("{",ANSI_RED + " "));
+            lines.set(i, lines.get(i).replace("}",ANSI_RESET + " "));
         }
     }
 
@@ -140,10 +121,7 @@ public class BinaryTreePrinter<T extends Comparable<T>> implements Printer{
                 deque.add(currentNode.getLeftChild());
                 deque.add(currentNode.getRightChild());
                 if (currentNode.getColor() == Color.RED) {
-                    redValues.add(currentNode.getValue().toString());
-                }
-                else if (currentNode.getColor() == Color.BLACK) {
-                    blackValues.add(currentNode.getValue().toString());
+                    text = "{" + text + "}";
                 }
             }
             else {

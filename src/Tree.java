@@ -5,4 +5,5 @@ public interface Tree<T extends Comparable<T>> {
     Node<T> getRoot();
 
     void printTree();
+
 }
